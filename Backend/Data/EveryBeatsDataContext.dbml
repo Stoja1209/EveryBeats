@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Everybeats" Class="EveryBeatsDataContextDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Everybeats;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="EverybeatsConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Agreement" Member="Agreements">
+    <Type Name="Agreement">
+      <Column Name="agreement_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="order_item_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="signed_pdf_url" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="signed_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="OrderItem_Agreement" Member="OrderItem" ThisKey="order_item_id" OtherKey="order_item_id" Type="OrderItem" IsForeignKey="true" />
+      <Association Name="Producer_Agreement" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
+      <Association Name="User_Agreement" Member="User" ThisKey="userID" OtherKey="userID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BankDetails" Member="BankDetails">
+    <Type Name="BankDetail">
+      <Column Name="bank_detail_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="account_holder" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="bank_name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="account_number" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="branch_code" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Association Name="Producer_BankDetail" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Beat" Member="Beats">
+    <Type Name="Beat">
+      <Column Name="beat_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="genre_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="bmp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="music_key" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="mp3_file" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="wav_file" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="stems_file" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="status" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="created_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Beat_Collaboration" Member="Collaborations" ThisKey="beat_id" OtherKey="beat_id" Type="Collaboration" />
+      <Association Name="Beat_License" Member="Licenses" ThisKey="beat_id" OtherKey="beat_id" Type="License" />
+      <Association Name="Beat_OrderItem" Member="OrderItems" ThisKey="beat_id" OtherKey="beat_id" Type="OrderItem" />
+      <Association Name="Beat_ShoppingCart" Member="ShoppingCarts" ThisKey="beat_id" OtherKey="beat_id" Type="ShoppingCart" />
+      <Association Name="Genre_Beat" Member="Genre" ThisKey="genre_id" OtherKey="genre_id" Type="Genre" IsForeignKey="true" />
+      <Association Name="Producer_Beat" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Collaborations" Member="Collaborations">
+    <Type Name="Collaboration">
+      <Column Name="collaboration_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="beat_id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="split_percent" Type="System.Decimal" DbType="Decimal(5,2) NOT NULL" CanBeNull="false" />
+      <Association Name="Beat_Collaboration" Member="Beat" ThisKey="beat_id" OtherKey="beat_id" Type="Beat" IsForeignKey="true" />
+      <Association Name="Producer_Collaboration" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Genre" Member="Genres">
+    <Type Name="Genre">
+      <Column Name="genre_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Genre_Beat" Member="Beats" ThisKey="genre_id" OtherKey="genre_id" Type="Beat" />
+    </Type>
+  </Table>
+  <Table Name="dbo.License" Member="Licenses">
+    <Type Name="License">
+      <Column Name="license_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="beat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="liscencse_type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="terms" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="price" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="created_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="update_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="License_OrderItem" Member="OrderItems" ThisKey="license_id" OtherKey="license_id" Type="OrderItem" />
+      <Association Name="Beat_License" Member="Beat" ThisKey="beat_id" OtherKey="beat_id" Type="Beat" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrderItems" Member="OrderItems">
+    <Type Name="OrderItem">
+      <Column Name="order_item_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="order_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="beat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="license_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="price_paid" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="Order_item_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="OrderItem_Agreement" Member="Agreements" ThisKey="order_item_id" OtherKey="order_item_id" Type="Agreement" />
+      <Association Name="OrderItem_Split" Member="Splits" ThisKey="order_item_id" OtherKey="order_item_id" Type="Split" />
+      <Association Name="Beat_OrderItem" Member="Beat" ThisKey="beat_id" OtherKey="beat_id" Type="Beat" IsForeignKey="true" />
+      <Association Name="License_OrderItem" Member="License" ThisKey="license_id" OtherKey="license_id" Type="License" IsForeignKey="true" />
+      <Association Name="Order_OrderItem" Member="Order" ThisKey="order_id" OtherKey="order_id" Type="Order" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Orders" Member="Orders">
+    <Type Name="Order">
+      <Column Name="order_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="total_amount" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="OrderDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="status" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Association Name="Order_OrderItem" Member="OrderItems" ThisKey="order_id" OtherKey="order_id" Type="OrderItem" />
+      <Association Name="User_Order" Member="User" ThisKey="userID" OtherKey="userID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Payouts" Member="Payouts">
+    <Type Name="Payout">
+      <Column Name="payout_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="amount" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Column Name="status" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="paid_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Payout_Split" Member="Splits" ThisKey="payout_id" OtherKey="payout_id" Type="Split" />
+      <Association Name="Producer_Payout" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Producer" Member="Producers">
+    <Type Name="Producer">
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="artist_name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Producer_Agreement" Member="Agreements" ThisKey="producer_id" OtherKey="producer_id" Type="Agreement" />
+      <Association Name="Producer_BankDetail" Member="BankDetails" ThisKey="producer_id" OtherKey="producer_id" Type="BankDetail" />
+      <Association Name="Producer_Beat" Member="Beats" ThisKey="producer_id" OtherKey="producer_id" Type="Beat" />
+      <Association Name="Producer_Collaboration" Member="Collaborations" ThisKey="producer_id" OtherKey="producer_id" Type="Collaboration" />
+      <Association Name="Producer_Payout" Member="Payouts" ThisKey="producer_id" OtherKey="producer_id" Type="Payout" />
+      <Association Name="Producer_Split" Member="Splits" ThisKey="producer_id" OtherKey="producer_id" Type="Split" />
+      <Association Name="User_Producer" Member="User" ThisKey="userID" OtherKey="userID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ShoppingCart" Member="ShoppingCarts">
+    <Type Name="ShoppingCart">
+      <Column Name="cart_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="beat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="license_type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="date_added" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Beat_ShoppingCart" Member="Beat" ThisKey="beat_id" OtherKey="beat_id" Type="Beat" IsForeignKey="true" />
+      <Association Name="User_ShoppingCart" Member="User" ThisKey="userID" OtherKey="userID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Splits" Member="Splits">
+    <Type Name="Split">
+      <Column Name="split_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="order_item_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="producer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="payout_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="percentage" Type="System.Decimal" DbType="Decimal(5,2) NOT NULL" CanBeNull="false" />
+      <Column Name="amount" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Association Name="OrderItem_Split" Member="OrderItem" ThisKey="order_item_id" OtherKey="order_item_id" Type="OrderItem" IsForeignKey="true" />
+      <Association Name="Payout_Split" Member="Payout" ThisKey="payout_id" OtherKey="payout_id" Type="Payout" IsForeignKey="true" />
+      <Association Name="Producer_Split" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="userID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="first_name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="last_name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="id_number" Type="System.String" DbType="Char(13) NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="cellnumber" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="password_hash" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="race" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="role" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="created_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="is_active" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="User_Agreement" Member="Agreements" ThisKey="userID" OtherKey="userID" Type="Agreement" />
+      <Association Name="User_Order" Member="Orders" ThisKey="userID" OtherKey="userID" Type="Order" />
+      <Association Name="User_Producer" Member="Producers" ThisKey="userID" OtherKey="userID" Type="Producer" />
+      <Association Name="User_ShoppingCart" Member="ShoppingCarts" ThisKey="userID" OtherKey="userID" Type="ShoppingCart" />
+    </Type>
+  </Table>
+</Database>
