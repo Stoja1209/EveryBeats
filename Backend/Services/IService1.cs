@@ -1,4 +1,5 @@
 ﻿using EveryBeats.Backend.Data;
+using EveryBeats.Backend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,7 +153,10 @@ namespace EveryBeats
         // AGREEMENTS
         // ============================================================
         [OperationContract]
-        int generateAgreement(int orderItemID, int producerID, int userID);
+        int signAgreement(int orderItemID, int producerID, int userID);
+
+        [OperationContract]
+        bool generateAgreementPDF(int agreementID);
 
         [OperationContract]
         Agreement getAgreementByID(int agreementID);
@@ -216,6 +220,54 @@ namespace EveryBeats
 
         [OperationContract]
         List<OrderItem> getSalesHistory(int producerID);
+
+        // ====================== MODEL METHODS =======================
+
+        // ============================================================
+        // REPORT METHODS
+        // ============================================================
+
+        [OperationContract]
+        List<UserRegistrationStats> getRegisteredUsersPerDay(DateTime startDate, DateTime endDate);
+
+        [OperationContract]
+        decimal getTotalRevenueByDateRange(DateTime startDate, DateTime endDate);
+
+        [OperationContract]
+        List<GenreSalesStats> getSalesByGenre();
+
+        [OperationContract]
+        List<ProducerSalesStats> getTopSellingProducers(int count);
+
+        [OperationContract]
+        List<MonthlySalesStats> getMonthlySales(int year, int month);
+
+        // ============================================================
+        // INVOICE METHODS
+        // ============================================================
+
+        [OperationContract]
+        Invoice getInvoiceByOrderID(int orderID);
+
+        [OperationContract]
+        List<Invoice> getAllInvoicesByUser(int userID);
+
+        // ============================================================
+        // CART METHOD
+        // ============================================================
+
+        [OperationContract]
+        bool updateCartItemLicense(int userID, int beatID, string newLicenseType);
+
+        // ============================================================
+        // TRANSACTION METHODS
+        // ============================================================
+
+        [OperationContract]
+        decimal calculateDiscount(int userID, decimal total);
+
+        [OperationContract]
+        int getLoyaltyPoints(int userID);
     }
 
 

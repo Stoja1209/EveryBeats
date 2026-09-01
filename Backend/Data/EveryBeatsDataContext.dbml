@@ -8,6 +8,8 @@
       <Column Name="order_item_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="signed_pdf_url" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="signed_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Member="agreement_version" Type="System.Int32" DbType="INT NOT NULL" CanBeNull="false" />
+      <Column Member="IsSigned" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" />
       <Association Name="OrderItem_Agreement" Member="OrderItem" ThisKey="order_item_id" OtherKey="order_item_id" Type="OrderItem" IsForeignKey="true" />
       <Association Name="Producer_Agreement" Member="Producer" ThisKey="producer_id" OtherKey="producer_id" Type="Producer" IsForeignKey="true" />
       <Association Name="User_Agreement" Member="User" ThisKey="userID" OtherKey="userID" Type="User" IsForeignKey="true" />
@@ -35,7 +37,7 @@
       <Column Name="mp3_file" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="wav_file" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="stems_file" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="status" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="status" Member="is_active" Storage="_status" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" />
       <Column Name="created_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="Beat_Collaboration" Member="Collaborations" ThisKey="beat_id" OtherKey="beat_id" Type="Collaboration" />
       <Association Name="Beat_License" Member="Licenses" ThisKey="beat_id" OtherKey="beat_id" Type="License" />
@@ -66,11 +68,12 @@
     <Type Name="License">
       <Column Name="license_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="beat_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="liscencse_type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="liscencse_type" Member="license_type" Storage="_liscencse_type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
       <Column Name="terms" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="price" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
       <Column Name="created_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="update_at" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Member="is_active" Type="System.Boolean" DbType="BIT NOT NULL" CanBeNull="false" />
       <Association Name="License_OrderItem" Member="OrderItems" ThisKey="license_id" OtherKey="license_id" Type="OrderItem" />
       <Association Name="Beat_License" Member="Beat" ThisKey="beat_id" OtherKey="beat_id" Type="Beat" IsForeignKey="true" />
     </Type>

@@ -224,6 +224,10 @@ namespace EveryBeats.Backend.Data
 		
 		private System.Nullable<System.DateTime> _signed_at;
 		
+		private int _agreement_version;
+		
+		private bool _IsSigned;
+		
 		private EntityRef<OrderItem> _OrderItem;
 		
 		private EntityRef<Producer> _Producer;
@@ -246,6 +250,10 @@ namespace EveryBeats.Backend.Data
     partial void Onsigned_pdf_urlChanged();
     partial void Onsigned_atChanging(System.Nullable<System.DateTime> value);
     partial void Onsigned_atChanged();
+    partial void Onagreement_versionChanging(int value);
+    partial void Onagreement_versionChanged();
+    partial void OnIsSignedChanging(bool value);
+    partial void OnIsSignedChanged();
     #endregion
 		
 		public Agreement()
@@ -384,6 +392,46 @@ namespace EveryBeats.Backend.Data
 					this._signed_at = value;
 					this.SendPropertyChanged("signed_at");
 					this.Onsigned_atChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_agreement_version", DbType="INT NOT NULL")]
+		public int agreement_version
+		{
+			get
+			{
+				return this._agreement_version;
+			}
+			set
+			{
+				if ((this._agreement_version != value))
+				{
+					this.Onagreement_versionChanging(value);
+					this.SendPropertyChanging();
+					this._agreement_version = value;
+					this.SendPropertyChanged("agreement_version");
+					this.Onagreement_versionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSigned", DbType="BIT NOT NULL")]
+		public bool IsSigned
+		{
+			get
+			{
+				return this._IsSigned;
+			}
+			set
+			{
+				if ((this._IsSigned != value))
+				{
+					this.OnIsSignedChanging(value);
+					this.SendPropertyChanging();
+					this._IsSigned = value;
+					this.SendPropertyChanged("IsSigned");
+					this.OnIsSignedChanged();
 				}
 			}
 		}
@@ -758,7 +806,7 @@ namespace EveryBeats.Backend.Data
 		
 		private string _stems_file;
 		
-		private string _status;
+		private bool _status;
 		
 		private System.Nullable<System.DateTime> _created_at;
 		
@@ -796,8 +844,8 @@ namespace EveryBeats.Backend.Data
     partial void Onwav_fileChanged();
     partial void Onstems_fileChanging(string value);
     partial void Onstems_fileChanged();
-    partial void OnstatusChanging(string value);
-    partial void OnstatusChanged();
+    partial void Onis_activeChanging(bool value);
+    partial void Onis_activeChanged();
     partial void Oncreated_atChanging(System.Nullable<System.DateTime> value);
     partial void Oncreated_atChanged();
     #endregion
@@ -1001,8 +1049,8 @@ namespace EveryBeats.Backend.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
-		public string status
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="status", Storage="_status", DbType="BIT NOT NULL")]
+		public bool is_active
 		{
 			get
 			{
@@ -1012,11 +1060,11 @@ namespace EveryBeats.Backend.Data
 			{
 				if ((this._status != value))
 				{
-					this.OnstatusChanging(value);
+					this.Onis_activeChanging(value);
 					this.SendPropertyChanging();
 					this._status = value;
-					this.SendPropertyChanged("status");
-					this.OnstatusChanged();
+					this.SendPropertyChanged("is_active");
+					this.Onis_activeChanged();
 				}
 			}
 		}
@@ -1580,6 +1628,8 @@ namespace EveryBeats.Backend.Data
 		
 		private System.Nullable<System.DateTime> _update_at;
 		
+		private bool _is_active;
+		
 		private EntitySet<OrderItem> _OrderItems;
 		
 		private EntityRef<Beat> _Beat;
@@ -1592,8 +1642,8 @@ namespace EveryBeats.Backend.Data
     partial void Onlicense_idChanged();
     partial void Onbeat_idChanging(int value);
     partial void Onbeat_idChanged();
-    partial void Onliscencse_typeChanging(string value);
-    partial void Onliscencse_typeChanged();
+    partial void Onlicense_typeChanging(string value);
+    partial void Onlicense_typeChanged();
     partial void OntermsChanging(string value);
     partial void OntermsChanged();
     partial void OnpriceChanging(decimal value);
@@ -1602,6 +1652,8 @@ namespace EveryBeats.Backend.Data
     partial void Oncreated_atChanged();
     partial void Onupdate_atChanging(System.Nullable<System.DateTime> value);
     partial void Onupdate_atChanged();
+    partial void Onis_activeChanging(bool value);
+    partial void Onis_activeChanged();
     #endregion
 		
 		public License()
@@ -1655,8 +1707,8 @@ namespace EveryBeats.Backend.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_liscencse_type", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
-		public string liscencse_type
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="liscencse_type", Storage="_liscencse_type", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
+		public string license_type
 		{
 			get
 			{
@@ -1666,11 +1718,11 @@ namespace EveryBeats.Backend.Data
 			{
 				if ((this._liscencse_type != value))
 				{
-					this.Onliscencse_typeChanging(value);
+					this.Onlicense_typeChanging(value);
 					this.SendPropertyChanging();
 					this._liscencse_type = value;
-					this.SendPropertyChanged("liscencse_type");
-					this.Onliscencse_typeChanged();
+					this.SendPropertyChanged("license_type");
+					this.Onlicense_typeChanged();
 				}
 			}
 		}
@@ -1751,6 +1803,26 @@ namespace EveryBeats.Backend.Data
 					this._update_at = value;
 					this.SendPropertyChanged("update_at");
 					this.Onupdate_atChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_is_active", DbType="BIT NOT NULL")]
+		public bool is_active
+		{
+			get
+			{
+				return this._is_active;
+			}
+			set
+			{
+				if ((this._is_active != value))
+				{
+					this.Onis_activeChanging(value);
+					this.SendPropertyChanging();
+					this._is_active = value;
+					this.SendPropertyChanged("is_active");
+					this.Onis_activeChanged();
 				}
 			}
 		}
