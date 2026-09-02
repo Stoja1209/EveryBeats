@@ -16,7 +16,7 @@ CREATE TABLE Users(
 	role VARCHAR(20) NOT NULL DEFAULT 'buyer',
 	CONSTRAINT CK_Users_Role CHECK (role IN ('buyer', 'producer', 'both', 'admin')),
 	created_at DATETIME DEFAULT SYSDATETIME(),
-	is_active BIT 
+	is_active BIT DEFAULT 1
     PRIMARY KEY(userID)
 );
 
@@ -72,6 +72,7 @@ CREATE TABLE Beat(
 	wav_file VARCHAR(max) NOT NULL,
 	stems_file VARCHAR(max),
 	status VARCHAR NOT NULL DEFAULT 'Available',
+	CONSTRAINT CK_Beat_Status CHECK (status IN ('Available', 'Sold', 'Draft')),
 	created_at DATETIME DEFAULT SYSDATETIME(),
 	PRIMARY KEY(beat_id),
 	FOREIGN KEY(producer_id) REFERENCES Producer(producer_id),
