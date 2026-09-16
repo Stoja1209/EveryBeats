@@ -82,6 +82,7 @@
     <Compile Include="Backend\Models\Invoice.cs" />
     <Compile Include="Backend\Models\MonthlySalesStats.cs" />
     <Compile Include="Backend\Models\ProducerSalesStats.cs" />
+    <Compile Include="Backend\Models\ProductSalesCount.cs" />
     <Compile Include="Backend\Models\UserRegistrationStats.cs" />
     <Compile Include="Backend\Services\IService1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

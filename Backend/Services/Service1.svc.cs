@@ -186,6 +186,62 @@ namespace EveryBeats
         }
 
         // ============================================================
+        // CATALOG SORTING METHODS
+        // ============================================================
+
+        public List<Beat> getBeatsSortedByPriceAsc()
+        {
+            return (from b in db.Beats
+                    join l in db.Licenses on b.beat_id equals l.beat_id
+                    where b.is_active == true && l.is_active == true
+                    orderby l.price ascending
+                    select b).Distinct().ToList();
+        }
+
+        public List<Beat> getBeatsSortedByPriceDesc()
+        {
+            return (from b in db.Beats
+                    join l in db.Licenses on b.beat_id equals l.beat_id
+                    where b.is_active == true && l.is_active == true
+                    orderby l.price descending
+                    select b).Distinct().ToList();
+        }
+
+        public List<Beat> getBeatsSortedByTitle()
+        {
+            return (from b in db.Beats
+                    where b.is_active == true
+                    orderby b.title ascending
+                    select b).ToList();
+        }
+
+        public List<Beat> getBeatsSortedByDate()
+        {
+            return (from b in db.Beats
+                    where b.is_active == true
+                    orderby b.created_at descending
+                    select b).ToList();
+        }
+        public List<ProductSalesCount> getSalesCountPerBeat()
+        {
+            t    return (from oi in db.OrderItems
+                         join b in db.Beats on oi.beat_id equals b.beat_id
+                         group oi by new { b.beat_id, b.title, b.is_active } into g
+                         select new ProductSalesCount
+                         {
+                             BeatTitle = g.Key.title,
+                             SalesCount = g.Count(),
+                             OnHand = g.Key.is_active == true ? 1 : 0
+                         }).ToList();
+        }
+
+        public int getTotalBeatsSold()
+        {
+            return (from oi in db.OrderItems
+                    select oi.beat_id).Distinct().Count();
+        }
+
+        // ============================================================
         // LICENSE MANAGEMENT
         // ============================================================
 
@@ -677,11 +733,8 @@ namespace EveryBeats
                 return 0;
             }
         }
-        bool IService1.generateAgreementPDF(int agreementID) {
-           return generateAgreementPDF(agreementID);
-        }
 
-        bool generateAgreementPDF(int agreementID)
+        public bool generateAgreementPDF(int agreementID)
         {
             try
             {
@@ -729,7 +782,6 @@ namespace EveryBeats
                 return false;
             }
         }
-
         public Agreement getAgreementByID(int agreementID)
         {
             return (from a in db.Agreements where a.agreement_id == agreementID select a).SingleOrDefault();
@@ -930,8 +982,7 @@ namespace EveryBeats
         // ============================================================
         // REPORT METHODS
         // ============================================================
-
-        List<UserRegistrationStats> IService1.getRegisteredUsersPerDay(DateTime startDate, DateTime endDate)
+        public List<UserRegistrationStats> getRegisteredUsersPerDay(DateTime startDate, DateTime endDate)
         {
             return (from u in db.Users
                     where u.created_at >= startDate && u.created_at <= endDate
@@ -945,16 +996,14 @@ namespace EveryBeats
                     select stats)
                     .ToList();
         }
-
-        decimal IService1.getTotalRevenueByDateRange(DateTime startDate, DateTime endDate)
+        public decimal getTotalRevenueByDateRange(DateTime startDate, DateTime endDate)
         {
             return (from o in db.Orders
                     where o.OrderDate >= startDate && o.OrderDate <= endDate
                     where o.status == "completed"
                     select o.total_amount).Sum();
         }
-
-        List<GenreSalesStats> IService1.getSalesByGenre()
+        public List<GenreSalesStats> getSalesByGenre()
         {
             return (from oi in db.OrderItems
                     join b in db.Beats on oi.beat_id equals b.beat_id
@@ -970,8 +1019,7 @@ namespace EveryBeats
                     select stats)
                     .ToList();
         }
-
-        List<ProducerSalesStats> IService1.getTopSellingProducers(int count)
+        public List<ProducerSalesStats> getTopSellingProducers(int count)
         {
             return (from oi in db.OrderItems
                     join b in db.Beats on oi.beat_id equals b.beat_id
@@ -987,11 +1035,10 @@ namespace EveryBeats
                     } into stats
                     orderby stats.TotalSales descending
                     select stats)
-        .Take(count)
-        .ToList();
+                    .Take(count)
+                    .ToList();
         }
-
-        List<MonthlySalesStats> IService1.getMonthlySales(int year, int month)
+        public List<MonthlySalesStats> getMonthlySales(int year, int month)
         {
             return (from o in db.Orders
                     where o.OrderDate.Value.Year == year
@@ -1008,19 +1055,13 @@ namespace EveryBeats
                     } into stats
                     orderby stats.Month
                     select stats)
-                    .ToList();
+                     .ToList();
         }
 
         // ============================================================
         // INVOICE METHODS
         // ============================================================
-
-        Invoice IService1.getInvoiceByOrderID(int orderID)
-        {
-            return getInvoiceByOrderID(orderID);           
-        }
-
-        Invoice getInvoiceByOrderID(int orderID)
+        public Invoice getInvoiceByOrderID(int orderID)
         {
             var order = getOrderByID(orderID);
             if (order == null) return null;
@@ -1049,8 +1090,7 @@ namespace EveryBeats
                 Items = items
             };
         }
-
-        List<Invoice> IService1.getAllInvoicesByUser(int userID)
+        public List<Invoice> getAllInvoicesByUser(int userID)
         {
             var orders = getOrdersByUser(userID);
             var invoices = new List<Invoice>();
@@ -1067,8 +1107,7 @@ namespace EveryBeats
         // ============================================================
         // CART METHOD
         // ============================================================
-
-        bool IService1.updateCartItemLicense(int userID, int beatID, string newLicenseType)
+        public bool updateCartItemLicense(int userID, int beatID, string newLicenseType)
         {
             var cartItem = (from s in db.ShoppingCarts where s.userID == userID && s.beat_id == beatID select s).SingleOrDefault();
 
@@ -1087,11 +1126,11 @@ namespace EveryBeats
             catch (Exception) { return false; }
         }
 
+
         // ============================================================
         // TRANSACTION METHODS
         // ============================================================
-
-        decimal IService1.calculateDiscount(int userID, decimal total)
+        public decimal calculateDiscount(int userID, decimal total)
         {
             decimal discount = 0;
 
@@ -1113,12 +1152,7 @@ namespace EveryBeats
             return Math.Min(discount, total * 0.25m); // Max 25% discount
         }
 
-        int IService1.getLoyaltyPoints(int userID)
-        {
-            return getLoyaltyPoints(userID);
-        }
-
-        int getLoyaltyPoints(int userID)
+        public int getLoyaltyPoints(int userID)
         {
             // 1 point per R10 spent on completed orders
             var totalSpent = (from o in db.Orders
@@ -1127,7 +1161,6 @@ namespace EveryBeats
 
             return (int)(totalSpent / 10);
         }
-
         public decimal calculateLoyaltyDiscount(int userID, int pointsToUse)
         {
             // Get available points

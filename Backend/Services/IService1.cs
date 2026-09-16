@@ -71,6 +71,28 @@ namespace EveryBeats
         [OperationContract]
         List<Beat> searchBeats(string keyword);
 
+        [OperationContract]
+        int getTotalBeatsSold();
+
+        [OperationContract]
+        List<ProductSalesCount> getSalesCountPerBeat();
+
+        // ============================================================
+        // CATALOG SORTING METHODS
+        // ============================================================
+
+        [OperationContract]
+        List<Beat> getBeatsSortedByPriceAsc();
+
+        [OperationContract]
+        List<Beat> getBeatsSortedByPriceDesc();
+
+        [OperationContract]
+        List<Beat> getBeatsSortedByTitle();
+
+        [OperationContract]
+        List<Beat> getBeatsSortedByDate();
+
         // ============================================================
         // LICENSE MANAGEMENT
         // ============================================================
