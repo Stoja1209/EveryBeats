@@ -16,7 +16,7 @@ CREATE TABLE Users(
 	role VARCHAR(20) NOT NULL DEFAULT 'buyer',
 	CONSTRAINT CK_Users_Role CHECK (role IN ('buyer', 'producer', 'both', 'admin')),
 	created_at DATETIME DEFAULT SYSDATETIME(),
-	is_active BIT 
+	is_active BIT DEFAULT 1,
     PRIMARY KEY(userID)
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE Beat(
 	mp3_file VARCHAR(max) NOT NULL,
 	wav_file VARCHAR(max) NOT NULL,
 	stems_file VARCHAR(max),
-	status VARCHAR NOT NULL DEFAULT 'Available',
+	is_active BIT DEFAULT 1,
 	created_at DATETIME DEFAULT SYSDATETIME(),
 	PRIMARY KEY(beat_id),
 	FOREIGN KEY(producer_id) REFERENCES Producer(producer_id),
@@ -84,12 +84,13 @@ CREATE TABLE Beat(
 CREATE TABLE License(
 	license_id INT IDENTITY(1,1),
 	beat_id INT NOT NULL,
-	liscencse_type VARCHAR(20) NOT NULL,
+	license_type VARCHAR(20) NOT NULL,
 	terms VARCHAR(MAX) NOT NULL,
 	price DECIMAL(10,2) NOT NULL,
 	created_at DATETIME DEFAULT SYSDATETIME(),
 	update_at DATETIME DEFAULT SYSDATETIME(),
-	CONSTRAINT Ltype CHECK(liscencse_type IN('lease','exclusive')),
+	is_active BIT DEFAULT 1,
+	CONSTRAINT Ltype CHECK(license_type IN('lease','exclusive')),
 	PRIMARY KEY(license_id),
 	FOREIGN KEY (beat_id) REFERENCES Beat(beat_id)
 );
@@ -149,6 +150,8 @@ CREATE TABLE Agreement(
     order_item_id INT NOT NULL UNIQUE,
     signed_pdf_url VARCHAR(max),
     signed_at DATETIME DEFAULT SYSDATETIME(),
+	agreement_version INT NOT NULL,
+	IsSigned BIT DEFAULT 0,
 	FOREIGN KEY (producer_id) REFERENCES Producer(producer_id),
 	FOREIGN KEY (userID) REFERENCES Users(userID),
     FOREIGN KEY (order_item_id) REFERENCES OrderItems(order_item_id)
