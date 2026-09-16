@@ -44,7 +44,7 @@ namespace EveryBeats
 
         public bool loginUser(string email, string password)
         {
-            var user = (from u in db.Users where u.email == email && u.password_hash == SecrecyHash.hashFunction(password) select u).SingleOrDefault();
+            var user = (from u in db.Users where u.email == email && u.password_hash == password select u).SingleOrDefault();
             return user != null;
         }
 
@@ -264,6 +264,11 @@ namespace EveryBeats
 
         public bool addCollaboration(int beatID, int producerID, decimal splitPercent)
         {
+
+            var existing = (from c in db.Collaborations where c.beat_id == beatID && c.producer_id == producerID select c).SingleOrDefault();
+
+            if (existing != null) { return false; } // Collab already exists
+
             try
             {
                 var collab = new Collaboration
@@ -839,6 +844,13 @@ namespace EveryBeats
 
         public int addGenre(string genreName)
         {
+
+            var existing = (from g in db.Genres where g.name.Equals(genreName) select g).SingleOrDefault();
+
+            if (existing != null) {
+                return existing.genre_id;
+            }
+
             try
             {
                 var genre = new Genre { name = genreName };
