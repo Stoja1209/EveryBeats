@@ -1,7 +1,8 @@
-                            EVERYBEATS                                     
-                    Beat Marketplace Platform                               
-                                                                            
-			C2C Marketplace for Music Producers & Buyers                     
+                                                                                                            EVERYBEATS                                      
+                     Beat Marketplace Platform                                
+                                                                              
+            C2C Marketplace for Music Producers & Buyers                      
+
 
 
 
@@ -17,6 +18,7 @@ Key Features:
 - User registration and authentication (Buyer, Producer, Admin roles)
 - Beat upload and management (MP3, WAV, Stems)
 - Browse and search beats by genre, BPM, and price
+- Catalog sorting by price, title, and date
 - Multi-producer collaboration with split percentages
 - Automated license agreement generation (PDF)
 - Mock payment processing
@@ -25,6 +27,7 @@ Key Features:
 - User ratings and reviews
 - Loyalty points system
 - Invoice generation and history
+- Comprehensive reporting (sales, revenue, user registrations)
 
 
 -------------------------------------------------------------------------------
@@ -49,7 +52,9 @@ EveryBeats/
 ├── Backend/                          ← WCF Services & Business Logic
 │   ├── Services/                     ← Service1.svc, IService1.cs
 │   ├── Data/                         ← LINQ to SQL DataContext (.dbml)
-│   ├── Models/                       ← DTOs (User, Beat, License, etc.)
+│   ├── Models/                       ← DTOs (Invoice, ProductSalesCount,
+│   │                                    GenreSalesStats, ProducerSalesStats,
+│   │                                    MonthlySalesStats, UserRegistrationStats)
 │   └── Helpers/                      ← PasswordHasher, PDFGenerator, MockPayment
 │
 ├── Frontend/                         ← ASP.NET Web Forms (Presentation Layer)
@@ -121,8 +126,8 @@ Step 5: Build and Run
 4. Press F5 to run the web application
 
 Default Test Account:
-- Email:    // TODO
-- Password: // TODO
+- Email:    admin@everybeats.com
+- Password: (Use the one from your test data)
 
 
 -------------------------------------------------------------------------------
@@ -166,6 +171,7 @@ Collaborations - Links beats to multiple producers with split %
 Order          - Purchase transactions
 OrderItems     - Items purchased in an order
 Agreement      - Legal contract (PDF) signed by the buyer
+                 (includes agreement_version and IsSigned flags)
 Payouts        - Producer payouts
 Splits         - Revenue distribution among collaborators
 ShoppingCart   - User's cart items
@@ -184,6 +190,9 @@ User Management:       loginUser, registerUser, updateUserProfile, deactivateUse
 
 Beat Management:       uploadBeat, updateBeat, deleteBeat, getBeatByID,
                        getAllBeats, getBeatsByProducer, getBeatsByGenre, searchBeats
+
+Catalog Sorting:       getBeatsSortedByPriceAsc, getBeatsSortedByPriceDesc,
+                       getBeatsSortedByTitle, getBeatsSortedByDate
 
 License Management:    addLicense, updateLicense, deleteLicense, getLicenseByID,
                        getLicensesByBeat, isLicenseAvailable
@@ -205,7 +214,8 @@ Payouts & Splits:      createPayout, approvePayout, markPayoutPaid,
                        getSplitsByProducer
 
 Reports:               getRegisteredUsersPerDay, getTotalRevenueByDateRange,
-                       getSalesByGenre, getTopSellingProducers, getMonthlySales
+                       getSalesByGenre, getTopSellingProducers, getMonthlySales,
+                       getTotalProductsSold, getSalesCountPerBeat
 
 Invoices:              getInvoiceByOrderID, getAllInvoicesByUser
 
@@ -242,6 +252,19 @@ Solution:
 
 Issue: "DateTime? does not contain a definition for Year"
 Solution: Use o.OrderDate.Value.Year instead of o.OrderDate.Year
+
+Issue: "Cannot insert duplicate key row" when adding a collaboration or genre
+Solution:
+  1. The service now checks for duplicates before inserting
+  2. Ensure the producer is not already added to the same beat
+  3. Ensure the genre name does not already exist in the Genre table
+
+Issue: "Login fails even with correct password"
+Solution:
+  1. The frontend must hash the password BEFORE sending it to the service
+  2. The service compares the received hash to the stored hash
+  3. Check that SecrecyHash.hashFunction() is called on the frontend side
+  4. Verify the hashing algorithm matches what was used when storing the hash
 
 
 -------------------------------------------------------------------------------
